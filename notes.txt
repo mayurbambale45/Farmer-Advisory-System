@@ -3,4 +3,22 @@
 1. Frontend 
 2. Backend
 3. ML model 
-4. Advisory system*/
+4. Advisory system
+
+
+for build app -> npx create-react-app my-app
+for run code  -> D:\Project-1\Farmer-Advisory-System\system>
+                npm start
+
+
+
+
+
+
+
+
+
+
+
+
+*/
