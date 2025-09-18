@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fertilizer Recommendation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🌾 Fertilizer Recommendation System</h1>
+        <p id="gps-status">Requesting GPS location...</p>
+
+        <div class="form-grid">
+            <select id="district">
+                <option value="">Select District</option>
+                {% for district in districts %}
+                    <option value="{{ district }}">{{ district }}</option>
+                {% endfor %}
+            </select>
+            <select id="soil_color">
+                <option value="">Select Soil Color</option>
+                {% for soil in soils %}
+                    <option value="{{ soil }}">{{ soil }}</option>
+                {% endfor %}
+            </select>
+            <select id="crop">
+                <option value="">Select Crop</option>
+                {% for crop in crops %}
+                    <option value="{{ crop }}">{{ crop }}</option>
+                {% endfor %}
+            </select>
+            
+            <input type="number" id="nitrogen" placeholder="Nitrogen (N)">
+            <input type="number" id="phosphorus" placeholder="Phosphorus (P)">
+            <input type="number" id="potassium" placeholder="Potassium (K)">
+            <input type="number" id="ph" placeholder="Soil pH">
+            <input type="number" id="rainfall" placeholder="Rainfall (mm)">
+            <input type="number" id="temperature" placeholder="Temperature (°C)">
+        </div>
+
+        <button id="predict-btn">Get Recommendation</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

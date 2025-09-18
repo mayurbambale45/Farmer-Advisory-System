@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Crop Suggestion App</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f0f8e0; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 500px; width: 100%; }
+        h1, h2 { text-align: center; color: #3a5a40; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #588157; }
+        input[type="number"], select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #3a5a40; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        button:hover { background-color: #588157; }
+        .result { margin-top: 20px; padding: 15px; background-color: #e8f5e9; border-left: 5px solid #3a5a40; text-align: center; font-size: 1.2em; font-weight: bold; color: #333; }
+        #location-status { text-align: center; font-style: italic; color: #777; margin-bottom: 20px; min-height: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌱 Smart Crop Suggestion System 🌱</h1>
+        <p id="location-status">Getting your location...</p>
+
+        <form action="/predict" method="post">
+            <div class="form-group">
+                <label for="Nitrogen">Nitrogen (N) in soil:</label>
+                <input type="number" step="any" id="Nitrogen" name="Nitrogen" placeholder="Fetching data..." required>
+            </div>
+            <div class="form-group">
+                <label for="Phosphorus">Phosphorus (P) in soil:</label>
+                <input type="number" step="any" id="Phosphorus" name="Phosphorus" placeholder="Fetching data..." required>
+            </div>
+            <div class="form-group">
+                <label for="Potassium">Potassium (K) in soil:</label>
+                <input type="number" step="any" id="Potassium" name="Potassium" placeholder="Fetching data..." required>
+            </div>
+            <div class="form-group">
+                <label for="pH">pH value of soil:</label>
+                <input type="number" step="any" id="pH" name="pH" placeholder="Fetching data..." required>
+            </div>
+            <div class="form-group">
+                <label for="Rainfall">Annual Rainfall (mm):</label>
+                <input type="number" step="any" id="Rainfall" name="Rainfall" placeholder="Fetching data..." required>
+            </div>
+            <div class="form-group">
+                <label for="Temperature">Current Temperature (°C):</label>
+                <input type="number" step="any" id="Temperature" name="Temperature" placeholder="Fetching data..." required>
+            </div>
+            <div class="form-group">
+                <label for="Soil_color">Soil Color:</label>
+                <select id="Soil_color" name="Soil_color" required>
+                    <option value="" disabled selected>-- Fetching data... --</option>
+                    <option value="Black">Black</option>
+                    <option value="Dark Brown">Dark Brown</option>
+                    <option value="Light Brown">Light Brown</option>
+                    <option value="Medium Brown">Medium Brown</option>
+                    <option value="Red">Red</option>
+                    <option value="Red ">Red </option>
+                    <option value="Reddish Brown">Reddish Brown</option>
+                </select>
+            </div>
+            <button type="submit">Get Suggestion</button>
+        </form>
+
+        {% if prediction_text %}
+            <div class="result">
+                <p>{{ prediction_text }}</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        window.onload = function() {
+            const status = document.getElementById('location-status');
+            const nitrogenInput = document.getElementById('Nitrogen');
+            const phosphorusInput = document.getElementById('Phosphorus');
+            const potassiumInput = document.getElementById('Potassium');
+            const phInput = document.getElementById('pH');
+            const rainfallInput = document.getElementById('Rainfall');
+            const temperatureInput = document.getElementById('Temperature');
+            const soilColorSelect = document.getElementById('Soil_color');
+
+            function success(position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                status.textContent = '📍 Location Acquired. Fetching local soil and weather data...';
+
+                fetch('/get_all_defaults', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ lat: latitude, lon: longitude }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Populate ALL form fields with the fetched default values
+                    nitrogenInput.value = data.N.toFixed(2);
+                    phosphorusInput.value = data.P.toFixed(2);
+                    potassiumInput.value = data.K.toFixed(2);
+                    phInput.value = data.pH.toFixed(2);
+                    rainfallInput.value = data.rainfall.toFixed(2);
+                    temperatureInput.value = data.temperature.toFixed(2);
+                    
+                    if (data.soil_type) {
+                        soilColorSelect.value = data.soil_type;
+                    }
+                    status.textContent = '✅ Local data loaded! You can now get a suggestion.';
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    status.textContent = 'Could not fetch local data. Please enter values manually.';
+                });
+            }
+
+            function error() {
+                status.textContent = 'Unable to retrieve location. Please enter values manually.';
+            }
+
+            if (!navigator.geolocation) {
+                status.textContent = 'Geolocation is not supported by your browser.';
+            } else {
+                navigator.geolocation.getCurrentPosition(success, error);
+            }
+        };
+    </script>
+</body>
+</html>

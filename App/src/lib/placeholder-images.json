@@ -1,0 +1,46 @@
+{
+  "placeholderImages": [
+    {
+      "id": "expert-1",
+      "description": "Portrait of Dr. Aris",
+      "imageUrl": "https://picsum.photos/seed/expert1/100/100",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "expert-2",
+      "description": "Portrait of Dr. Chen",
+      "imageUrl": "https://picsum.photos/seed/expert2/100/100",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "expert-3",
+      "description": "Portrait of Dr. Gupta",
+      "imageUrl": "https://picsum.photos/seed/expert3/100/100",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "farmer-1",
+      "description": "Avatar of user Alex",
+      "imageUrl": "https://picsum.photos/seed/farmer1/40/40",
+      "imageHint": "person avatar"
+    },
+    {
+      "id": "farmer-2",
+      "description": "Avatar of user Maria",
+      "imageUrl": "https://picsum.photos/seed/farmer2/40/40",
+      "imageHint": "person avatar"
+    },
+    {
+      "id": "farmer-3",
+      "description": "Avatar of user Kenji",
+      "imageUrl": "https://picsum.photos/seed/farmer3/40/40",
+      "imageHint": "person avatar"
+    },
+    {
+      "id": "current-user",
+      "description": "Avatar of the current user",
+      "imageUrl": "https://picsum.photos/seed/user99/40/40",
+      "imageHint": "person avatar"
+    }
+  ]
+}

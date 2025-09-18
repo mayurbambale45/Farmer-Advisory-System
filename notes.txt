@@ -7,8 +7,17 @@
 5. model
 
 for build app -> npx create-react-app my-app
-for run code  -> D:\Project-1\Farmer-Advisory-System\system>
-                npm start
+
+for run of react   
+1. cd D:\Project-1\Farmer-Advisory-System\studio
+2. npm install
+3. npm run dev
+
+run crop code ->
+1.  pip install -r requirements.txt
+2. python train_final_model.py
+3. python app.py
+
 
 
 
