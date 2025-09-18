@@ -1,0 +1,18 @@
+.dashboard {
+  display: flex;
+  height: 100vh;
+  font-family: sans-serif;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #2e7d32; /* A shade of green */
+  color: white;
+  padding: 20px;
+}
+
+.main-content {
+  flex-grow: 1; /* This makes it take up the rest of the space */
+  padding: 20px;
+  background-color: #f5f5f5; /* A light grey background */
+}
