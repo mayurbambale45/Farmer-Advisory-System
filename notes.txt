@@ -9,7 +9,7 @@
 for build app -> npx create-react-app my-app
 
 for run of react   
-1. cd D:\Project-1\Farmer-Advisory-System\studio
+1. cd D:\Project-1\Farmer-Advisory-System\App
 2. npm install
 3. npm run dev
 
