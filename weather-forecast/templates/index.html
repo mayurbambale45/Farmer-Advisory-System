@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer's Weather Forecast</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+
+        <header class="header card">
+            <h1>Hyperlocal Weather Forecast</h1>
+            <div id="location-info">
+                <span id="place-name">Detecting your location...</span><br>
+                <small id="coords"></small>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div id="advice-section" class="advice-card card hidden">
+                <h2>Today's Advice</h2>
+                <p id="advice-text">Loading advice...</p>
+            </div>
+
+            <div id="current-weather-card" class="card hidden">
+                <div id="current-icon" class="current-weather-icon"></div>
+                <div class="current-weather-details">
+                    <p class="temp"><span id="current-temp">--</span>°C</p>
+                    <p>Humidity: <span id="current-humidity">--</span>%</p>
+                    <p>Wind: <span id="current-wind">--</span> km/h</p>
+                </div>
+            </div>
+
+            <div id="forecast-card" class="card hidden">
+                <h2>7-Day Forecast</h2>
+                <div id="forecast-container">
+                    </div>
+            </div>
+        </main>
+        
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

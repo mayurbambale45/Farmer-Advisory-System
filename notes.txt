@@ -13,10 +13,19 @@ for run of react
 2. npm install
 3. npm run dev
 
+
+creat virtual evn ->
+1.     python3 -m venv .venv
+2.     .venv\Scripts\Activate.ps1
+3.     deactive
+
+
 run crop code ->
-1.  pip install -r requirements.txt
-2. python train_final_model.py
-3. python app.py
+1.      pip install -r req.txt
+2.      python train_model.py
+3.      python app.py
+
+
 
 
 
