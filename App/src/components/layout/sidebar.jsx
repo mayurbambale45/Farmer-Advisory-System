@@ -55,7 +55,7 @@ export function AppSidebar() {
           </SidebarMenuButton>
         </SidebarMenuItem>
         <SidebarMenuItem>
-          <SidebarMenuButton tooltip="Weather">
+          <SidebarMenuButton tooltip="Weather" onClick={() => window.open("http://localhost:5173/", "_blank")}>
             <CloudSun />
             Weather Forecast  
           </SidebarMenuButton>
