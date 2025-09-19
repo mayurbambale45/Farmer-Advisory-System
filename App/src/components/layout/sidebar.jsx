@@ -57,25 +57,25 @@ export function AppSidebar() {
         <SidebarMenuItem>
           <SidebarMenuButton tooltip="Weather">
             <CloudSun />
-            Weather
+            Weather Forecast  
           </SidebarMenuButton>
         </SidebarMenuItem>
         <SidebarMenuItem>
-          <SidebarMenuButton tooltip="Crop Prediction">
+          <SidebarMenuButton tooltip="Crop Prediction" onClick={() => window.open("http://127.0.0.1:5000", "_blank")}>
             <Leaf />
             Crop Prediction
           </SidebarMenuButton>
         </SidebarMenuItem>
         <SidebarMenuItem>
-          <SidebarMenuButton tooltip="Fertilizer">
+          <SidebarMenuButton tooltip="Fertilizer" onClick={() => window.open("http://127.0.0.1:5000", "_blank")}>
             <FlaskConical />
-            Fertilizer
+            Fertilizer Prediction
           </SidebarMenuButton>
         </SidebarMenuItem>
          <SidebarMenuItem>
           <SidebarMenuButton tooltip="Irrigation">
             <Droplets />
-            Irrigation
+            Irrigation Advice
           </SidebarMenuButton>
         </SidebarMenuItem>
          <SidebarMenuItem>
@@ -84,18 +84,7 @@ export function AppSidebar() {
             Alerts
           </SidebarMenuButton>
         </SidebarMenuItem>
-         <SidebarMenuItem>
-          <SidebarMenuButton tooltip="AI Advisor">
-            <Bot />
-            AI Advisor
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-        <SidebarMenuItem>
-          <SidebarMenuButton tooltip="Community">
-            <Users />
-            Community
-          </SidebarMenuButton>
-        </SidebarMenuItem>
+        
         <SidebarMenuItem>
           <SidebarMenuButton tooltip="Expert Talk">
             <Phone />
