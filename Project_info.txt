@@ -1,0 +1,280 @@
+FARMER ADVISORY SYSTEM — PROJECT INFORMATION
+================================================
+
+Last Updated: April 2026
+
+========================================================
+1. PROJECT OVERVIEW
+========================================================
+
+The Farmer Advisory System (AgriAssist) is a comprehensive
+microservices platform designed for farmers across India.
+It provides intelligent, real-time agricultural 
+recommendations through a modern web interface supporting
+English (Default), Hindi, and Marathi languages.
+
+The system integrates high-accuracy ML models, live weather
+APIs, and rapid-inference LLMs (Groq & Gemini) to provide
+end-to-end farming advisory — from crop selection and
+fertilizer dosing to smart irrigation and risk alerts.
+
+========================================================
+2. SYSTEM ARCHITECTURE
+========================================================
+
+Architecture Type: Microservices (8 independent services)
+Frontend-Backend Communication: REST API (HTTP/JSON)
+Frontend Framework: Next.js 15 (App Router)
+Backend Framework: Python Flask
+
+Service Diagram:
+┌─────────────────────────────────────────────────────────┐
+│                     FRONTEND (Port 9002)                │
+│                   Next.js 15 + Tailwind                 │
+└──────────┬─────────────────────────────────────────────┘
+           │ REST API calls
+    ┌──────┼───────────────────────────────────────┐
+    │      │       |        |        |       |     │
+    ▼      ▼       ▼        ▼        ▼       ▼     ▼
+ [5009] [5005]  [5001]   [5002]  [5003]  [5006] [5010]
+  Main    Chat    Crop     Fert   Weather  Irrig  Alert
+  API     Bot    Model    Model   Forecast  Plan  System
+(Auth/DB) (Groq) (RF)    (RF)  (OpenMeteo)(AI)(Rules)
+
+External APIs:
+  - Open-Meteo API (free, live weather data + rain forecast)
+  - Groq AI API   (LLaMA 3.3 70B, for AgriAssist chat)
+  - Google Gemini (for Irrigation planning)
+  - Twilio SMS API (for Real SMS OTP verification)
+  - Nominatim/OSM (reverse geocoding for location name)
+
+========================================================
+3. TECH STACK
+========================================================
+
+--- FRONTEND ---
+  Framework     : Next.js 15 (React, App Router)
+  Language      : JavaScript / JSX
+  Styling       : Tailwind CSS + shadcn/ui components
+  UI Library    : shadcn/ui (Card, Button, Form, Select...)
+  Icons         : Lucide React
+  Forms         : React Hook Form + Zod validation
+  HTTP Client   : Axios
+  Font          : Inter (Google Fonts)
+  Themes        : Light / Dark mode (next-themes)
+  Languages     : English (default), Hindi, Marathi
+
+--- BACKEND SERVICES ---
+  Runtime       : Python 3.10+
+  Framework     : Flask
+  CORS          : flask-cors
+  AI (Chat)     : Groq SDK (LLaMA-3.3-70B-Versatile)
+  AI (Irri.)    : Google Gemini (google-genai SDK)
+  SMS Service   : Twilio SDK (Real SMS OTP)
+  ML Library    : scikit-learn, joblib, pandas, numpy
+  Database      : PostgreSQL (DB: agriassist)
+  DB Driver     : psycopg2
+  Weather API   : Open-Meteo (free, no key required)
+  Geo API       : Nominatim / OpenStreetMap (free)
+
+--- ML MODELS ---
+  Crop Model    : Random Forest Classifier (300 trees)
+  Fertilizer    : Random Forest Classifier (300 trees)
+  Irrigation    : Decision Tree (weather-driven)
+  Encoding      : Label Encoding (District, Soil, Crop)
+  Train/Test    : 80% / 20% split (stratified)
+  Class Weight  : Balanced (handles class imbalance)
+
+========================================================
+4. ML MODEL DATASETS
+========================================================
+
+--- CROP RECOMMENDATION MODEL ---
+  Location      : crop/
+  Training File : crop/train_final_model.py
+  Datasets Used : smart_crop_data.csv (primary, 5001 rows)
+                  crop_data.csv       (supplementary)
+                  Crop_recommendation.csv (supplementary)
+  Features      : Nitrogen, Phosphorus, Potassium, pH,
+                  Rainfall, Temperature, District, Soil Color
+  Target        : Crop (12 classes)
+  Crops Covered : Cotton, Grapes, Jowar, Maize, Pomegranate,
+                  Rice, Soybean, Sugarcane, Tur, Wheat,
+                  and more from supplementary dataset
+  Districts     : Kolhapur, Pune, Sangli, Satara, Solapur
+  Model Files   : final_model.pkl, le_district_crop.pkl,
+                  le_soil_crop.pkl, le_crop_target.pkl
+
+  TO RETRAIN: cd crop && python train_final_model.py
+
+--- FERTILIZER ADVISORY MODEL ---
+  Location      : fert/
+  Training File : fert/train_model.py
+  Datasets Used : fertilizer_data.csv (primary, 5001 rows)
+                  fertilizer_crop_data.csv (supplementary)
+  Features      : Nitrogen, Phosphorus, Potassium, pH,
+                  Rainfall, Temperature, District, Soil Color,
+                  Crop Type
+  Target        : Fertilizer (8+ classes)
+  Fertilizers   : Urea, DAP, MOP, 10:26:26 NPK,
+                  19:19:19 NPK, 20:20:0:13, Ammonium Sulphate
+  Crops Covered : Cotton, Grapes, Jowar, Maize, Moong,
+                  Pomegranate, Rice, Soybean, Sugarcane,
+                  Tur, Wheat
+  Model Files   : model.pkl, le_district.pkl, le_soil.pkl,
+                  le_crop.pkl, le_fertilizer.pkl
+
+  TO RETRAIN: cd fert && python train_model.py
+
+--- IRRIGATION MODEL ---
+  Location      : weather/
+  Training File : weather/train_model.py (or Irrigation/)
+  Model File    : weather/irrigation_model_v2.pkl
+  Features      : max_temp_c, humidity_percent, rainfall_mm
+  Target        : Irrigate (0=No, 1=Yes)
+
+========================================================
+5. SERVICES DETAIL
+========================================================
+
+SERVICE 1: Frontend (App/)
+  Port    : 9002
+  Tech    : Next.js 15, React, Tailwind, shadcn/ui
+  Role    : Main user interface.
+  Features:
+    - Multi-language Dropdown (English, Hindi, Marathi)
+    - Native regional text with zero language mixing.
+    - Responsive dark/light modes.
+    - Graceful offline fallback windows.
+
+SERVICE 2: Main API (backend/)
+  Port    : 5009
+  Tech    : Flask, PostgreSQL, Twilio
+  Role    : Authentication, farmer profiles, DB management.
+  Features:
+    - Auto-creates 'agriassist' database on startup.
+    - Real SMS OTP via Twilio with 6-digit verification.
+    - Indian phone number normalization (+91).
+  Routes  :
+    POST /auth/signup        — Register farmer
+    POST /auth/send-otp      — Send Real/Demo SMS OTP
+    POST /auth/verify-otp    — Verify 6-digit OTP
+    POST /profile/save       — Save farm profile
+    GET  /profile/<id>       — Get farmer profile
+
+SERVICE 3: AgriAssist AI Chat (chat/)
+  Port    : 5005
+  Tech    : Flask, Groq SDK, LLaMA-3.3-70B
+  Role    : National AI agriculture assistant.
+  Features:
+    - India-wide context (All crops, All states).
+    - Sub-second response time.
+
+SERVICE 4: Crop Recommendation (crop/)
+  Port    : 5001
+  Model   : Random Forest (300 trees, balanced weights)
+  Data    : ~5000+ rows combined (smart_crop_data + extras)
+  Features:
+    - Returns Top-5 crop recommendations with probabilities.
+    - Fetches live temperature & rain from Open-Meteo.
+    - Covers 5 Maharashtra districts.
+
+SERVICE 5: Fertilizer Advisory (fert/)
+  Port    : 5002
+  Model   : Random Forest (300 trees, balanced weights)
+  Data    : ~5000+ rows (fertilizer_data + extras)
+  Features:
+    - Returns Top-5 fertilizer recommendations.
+    - Includes newer fertilizers: 19:19:19 NPK, 20:20:0:13,
+      Ammonium Sulphate, MOP, DAP, Urea.
+    - Supports Moong crop type (newly added).
+
+SERVICE 6: Weather Forecast (weather/)
+  Port    : 5003
+  API     : Open-Meteo (current + 7-day forecast)
+  Role    : Provides:
+    (a) Live weather: temperature, humidity, wind
+    (b) 7-day forecast incl. precipitation_sum (rainfall)
+    (c) AI irrigation advice (from irrigation_model_v2.pkl)
+  Note    : The Weather service already returns ACTUAL
+            rainfall data (current + 7-day forecast) from
+            Open-Meteo. NO separate rainfall prediction ML
+            model is needed — Open-Meteo provides daily
+            precipitation forecasts directly.
+
+SERVICE 7: Smart Irrigation (Irrigation/)
+  Port    : 5006
+  Tech    : Flask, Google Gemini AI
+  Role    : AI-powered irrigation scheduling advice.
+
+SERVICE 8: Live Alert System (Alert/)
+  Port    : 5010
+  Tech    : Flask
+  Role    : Rule-based weather risk alerts.
+
+
+========================================================
+6. MULTILINGUAL SUPPORT
+========================================================
+
+Languages Supported:
+  - English (en) — DEFAULT for All-India coverage
+  - Hindi   (hi)
+  - Marathi (mr)
+
+Language Toggle: Sophisticated Dropdown Menu.
+
+========================================================
+7. PORT QUICK REFERENCE
+========================================================
+
+  Port 9002  →  Frontend (Next.js)
+  Port 5001  →  Crop Recommendation (RF, 300 trees)
+  Port 5002  →  Fertilizer Advisory (RF, 300 trees)
+  Port 5003  →  Weather Forecast + Rainfall Data
+  Port 5005  →  AgriAssist AI Chat (Groq / LLaMA)
+  Port 5006  →  Smart Irrigation (Gemini AI)
+  Port 5009  →  Main API (Auth, DB & SMS)
+  Port 5010  →  Live Alert System
+
+  NOTE: No port assigned for /Rainfall (not integrated).
+
+========================================================
+8. KEY DESIGN DECISIONS
+========================================================
+
+1. NATIONAL SCOPE: Context broadened from state-specific to 
+   all-India coverage to serve the entire farming community.
+
+2. REAL SMS VERIFICATION: Integrated Twilio for production-grade
+   6-digit OTP security on mobile devices.
+
+3. ENGLISH BY DEFAULT: Set as the common link language, with
+   instantly accessible localized options via a dropdown.
+
+4. AUTO-DATABASE INFRA: Backend now checks and creates the 
+   PostgreSQL database automatically to ensure zero-config startup.
+
+5. DARK MODE FRIENDLY: UI elements (inputs, cards) optimized for 
+   perfect visibility in both light and dark themes.
+
+6. OPEN-METEO FOR RAINFALL: Instead of training a custom rainfall
+   prediction model, the system uses Open-Meteo's native 7-day
+   precipitation forecast — more accurate, always up-to-date.
+
+7. BALANCED ML TRAINING: Both crop and fertilizer models use
+   class_weight='balanced' to handle any class imbalance in
+   the training data, improving minority class accuracy.
+
+========================================================
+9. FUTURE IMPROVEMENTS (PLANNED)
+========================================================
+
+- Pest image upload and AI disease detection
+- Soil moisture sensor integration (IoT)
+- Market price tracker (mandi rates)
+- Government scheme alerts (PM Kisan etc.)
+- Offline-first PWA support
+- Voice input for low-literacy users
+- Expand to more districts beyond the current 5
+- Add more crops: Onion, Tomato, Chickpea, etc.

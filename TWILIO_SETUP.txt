@@ -1,0 +1,99 @@
+========================================================
+TWILIO SMS OTP — SETUP GUIDE
+========================================================
+
+STATUS: DEMO MODE (Twilio not yet enabled)
+In demo mode, the OTP is shown in the API response 
+and printed in the backend terminal.
+
+To enable REAL SMS delivery, follow these steps:
+
+--- STEP 1: Create a Twilio Account ---
+
+  1. Go to: https://www.twilio.com/try-twilio
+  2. Sign up for a FREE account (no credit card needed to start)
+  3. Verify your personal mobile number
+  4. You get $15.00 FREE credit (~150 SMS to Indian numbers)
+
+--- STEP 2: Get Your Credentials ---
+
+  From your Twilio Console (https://console.twilio.com):
+
+  - Account SID:   ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    (shown on main dashboard)
+
+  - Auth Token:    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    (shown on main dashboard, click eye to reveal)
+
+--- STEP 3: Get a Twilio Phone Number ---
+
+  1. Go to: Console → Phone Numbers → Manage → Buy a Number
+  2. Search for a number with "SMS" capability
+  3. For sending to India (+91), any US number works (+1)
+  4. The number costs ~$1/month (your free credit covers it)
+
+--- STEP 4: Enable International SMS to India ---
+
+  1. Console → Messaging → Settings → Geo Permissions
+  2. Enable "India" checkbox
+  3. Save
+
+--- STEP 5: Update backend/server.py ---
+
+  Open d:\PROJECTS\Farmer-Advisory-System\backend\server.py
+  
+  Find these 4 lines and update them:
+
+    TWILIO_ACCOUNT_SID  = "YOUR_TWILIO_ACCOUNT_SID"   ← paste your SID
+    TWILIO_AUTH_TOKEN   = "YOUR_TWILIO_AUTH_TOKEN"     ← paste your token
+    TWILIO_PHONE_NUMBER = "+1XXXXXXXXXX"               ← paste your Twilio number
+    TWILIO_ENABLED      = False                        ← change to True
+
+--- STEP 6: Install Twilio package (if not done) ---
+
+  pip install twilio
+
+--- STEP 7: Restart backend ---
+
+  In the backend terminal (port 5009):
+    Ctrl+C → python server.py
+
+  You should see:
+    🚀 AgriAssist Auth API running on Port 5009 | OTP Mode: Twilio SMS
+
+--- COST ESTIMATE ---
+
+  | Action              | Cost         |
+  |---------------------|--------------|
+  | Free signup credit  | +$15.00      |
+  | Indian SMS per msg  | ~$0.08-0.10  |
+  | Free SMS count      | ~150 SMS     |
+
+--- TESTING ---
+
+  After enabling Twilio:
+  1. Open the login page
+  2. Enter a real Indian mobile number
+  3. Click "Send OTP"
+  4. You should receive a real SMS within 3-5 seconds
+  5. The demo OTP badge will NO LONGER be shown in the UI
+
+========================================================
+DB SETUP (PostgreSQL)
+========================================================
+
+If you get a "Database not reachable" error, create 
+the 'agriassist' database manually:
+
+  1. Open pgAdmin or psql terminal
+  2. Run: CREATE DATABASE agriassist;
+  3. Restart backend/server.py
+  4. Tables are created automatically on first run
+
+Connection settings (backend/server.py):
+  host     = localhost
+  database = agriassist
+  user     = postgres
+  password = mayur
+
+========================================================

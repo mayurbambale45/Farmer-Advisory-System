@@ -1,0 +1,89 @@
+# ==========================================
+# FARMER ADVISORY SYSTEM - STARTUP GUIDE (v2.1)
+# ==========================================
+#
+# QUICK START SETUP (Run once):
+#   1. Check requirements.txt
+#   2. pip install -r requirements.txt
+#   3. Ensure PostgreSQL is running.
+#
+# ==========================================
+# SERVICES TO START (Start in this order)
+# ==========================================
+
+--- 1. MAIN API (Auth, DB & SMS) ---
+  Folder: backend/
+  Port:   5009
+  Commands:
+    cd backend
+    python server.py
+  *Note: The script will auto-create the 'agriassist' database.
+
+--- 2. FRONTEND (Next.js) ---
+  Folder: App/
+  Port:   9002
+  Commands:
+    cd App
+    npm install
+    npm run dev
+
+--- 3. AGRIASSIST AI CHAT ---
+  Folder: chat/
+  Port:   5005
+  Commands:
+    cd chat
+    python app.py
+
+--- 4. CROP RECOMMENDATION ---
+  Folder: crop/
+  Port:   5001
+  Commands:
+    cd crop
+    python app.py
+
+--- 5. FERTILIZER ADVISORY ---
+  Folder: fert/
+  Port:   5002
+  Commands:
+    cd fert
+    python app.py
+
+--- 6. WEATHER FORECAST ---
+  Folder: weather/
+  Port:   5003
+  Commands:
+    cd weather
+    python app.py
+
+--- 7. SMART IRRIGATION ---
+  Folder: Irrigation/
+  Port:   5006
+  Commands:
+    cd Irrigation
+    python app.py
+
+--- 8. LIVE ALERT SYSTEM ---
+  Folder: Alert/
+  Port:   5010
+  Commands:
+    cd Alert
+    python app.py
+
+# ==========================================
+# PORT MAP REFERENCE
+# ==========================================
+#
+#   9002  ->  Frontend (Language: English Default)
+#   5001  ->  Crop Model
+#   5002  ->  Fertilizer Model
+#   5003  ->  Weather Forecast
+#   5005  ->  AgriAssist AI Bot (Groq)
+#   5006  ->  Smart Irrigation (Gemini)
+#   5009  ->  Main API (PostgreSQL + Twilio)
+#   5010  ->  Live Weather Alerts
+#
+# ==========================================
+# If OTP doesn't arrive as SMS, check 
+# TWILIO_SETUP.txt to enable real SMS mode.
+# By default, OTP is shown in the terminal.
+# =========================================
